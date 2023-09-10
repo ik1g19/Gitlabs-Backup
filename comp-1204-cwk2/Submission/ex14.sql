@@ -1,0 +1,1 @@
+SELECT sum(cases) AS "total cases", sum(deaths) AS "total deaths" FROM Virus;
