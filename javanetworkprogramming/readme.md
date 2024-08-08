@@ -5,11 +5,11 @@ This coursework involved implementing a file transfer system using sockets in Ja
 # Features
 
 
-    The client can send files to the server using the "put" command.
+The client can send files to the server using the "put" command.
 
-    The server can retrieve files from the client using the "get" command.
+The server can retrieve files from the client using the "get" command.
 
-    Both the client and server handle incoming connections and commands, and perform file transfer operations accordingly.
+Both the client and server handle incoming connections and commands, and perform file transfer operations accordingly.
 
 
 # Usage
