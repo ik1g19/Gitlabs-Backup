@@ -8,3 +8,10 @@ A Java-based Sudoku solver that uses a backtracking algorithm to find solutions 
 - Animation for win conditions
 - User interface for loading and generating grids
 - Undo and redo functionality for grid changes
+
+# Dependencies
+
+
+Java 8 or later
+
+JavaFX library for user interface components
