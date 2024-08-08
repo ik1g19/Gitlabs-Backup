@@ -1,0 +1,5 @@
+Forward 10 ; 
+Rotate L ;
+If (Check 3) 
+ Then Rotate L ; Forward 1 ; Rotate R
+ Else Forward 3 ; Rotate L

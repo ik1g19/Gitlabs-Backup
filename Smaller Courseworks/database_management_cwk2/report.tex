@@ -1,0 +1,504 @@
+%% %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%% Problem Set/Assignment Template to be used by the
+%% Food and Resource Economics Department - IFAS
+%% University of Florida's graduates.
+%% %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%% Version 1.0 - November 2019
+%% %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%% Ariel Soto-Caro
+%%  - asotocaro@ufl.edu
+%%  - arielsotocaro@gmail.com
+%% %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+
+\documentclass[12pt]{article}
+\usepackage{design_ASC}
+\usepackage{tikz}
+
+\usepackage[utf8]{inputenc} % Required for inputting international characters
+\usepackage[T1]{fontenc} % Output font encoding for international characters
+\usepackage{stix} % Use the STIX fonts
+
+\setlength\parindent{0pt} %% Do not touch this
+%\setlength\parskip{1em}
+
+
+\begin{document}
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Vertical Line Title Page
+% LaTeX Template
+% Version 2.0 (22/7/17)
+%
+% This template was downloaded from:
+% http://www.LaTeXTemplates.com
+%
+% Original author:
+% Peter Wilson (herries.press@earthlink.net) with modifications by:
+% Vel (vel@latextemplates.com)
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\begin{titlepage} % Suppresses displaying the page number on the title page and the subsequent page counts as page 1
+	
+	\raggedleft % Right align the title page
+	
+	\rule{1pt}{\textheight} % Vertical line
+	\hspace{0.05\textwidth} % Whitespace between the vertical line and title page text
+	\parbox[b]{0.75\textwidth}{ % Paragraph box for holding the title page text, adjust the width to move the title page left or right on the page
+		
+		{\Huge\bfseries Database Modelling}\\[2\baselineskip] % Title
+		{\large\textit{COMP1204 - Coursework 2}}\\[4\baselineskip] % Subtitle or further description
+		{\Large\textsc{Isaac Klugman}} % Author name, lower case for consistent small caps
+		
+		\vspace{0.5\textheight} % Whitespace between the title block and the publisher
+		
+		{\noindent Student ID: 30979536}\\[\baselineskip] % Publisher and logo
+		{\noindent Username: ik1g19}\\[\baselineskip] % Publisher and logo
+	}
+
+\end{titlepage}
+
+
+\pagebreak
+
+\section*{The Relational Model}
+
+\subsection*{EX1}
+
+The relations and their relevant data types:
+
+-$dateRep$ - The day, month and year in date format of when the record was collected. TEXT Data type.
+
+-$day$ - The number of the day of the month of which the record was collected. INTEGER Data type.
+
+-$month$ - The number of the month of which the record was collected. INTEGER Data type.
+
+-$year$ - The year of which the record was collected. INTEGER Data type.
+
+-$cases$ - The number of recorded cases on that day. INTEGER Data type.
+
+-$deaths$ - The number of deaths on that day. INTEGER Data type.
+
+-$countriesAndTerritories$ - The name of the country or territory. TEXT Data type.
+
+-$geoId$ - The geographical identifier for that country or territory. TEXT Data type.
+
+-$countryTerritoryCode$ - The code for that country or territory. TEXT Data type.
+
+-$popData2018$ - The population of the country or territory as of 2018. INTEGER Data type.
+
+-$continentExp$ - The name of the country or territory's continent. TEXT Data type.
+
+\subsection*{EX2}
+
+Functional dependencies in the Data Set:
+
+-$dateRep \rightarrow day, month, year$
+
+-$countriesAndTerritories \rightarrow geoId, countryterritoryCode, continentExp, popData2018$
+
+-$geoId \rightarrow countriesAndTerritories, countryterritoryCode, continentExp, popData2018$
+
+\vspace{1em}
+
+Individually, $day, month, year, cases, deaths, countryTerritoryCode$ and $continentExp$ do not functionally determine anything.
+
+In this given data set, $popData2018$ functionally determines $countriesAndTerritories, geoId, continentExp$ and $countryTerritoryCode$. However it is possible that two countries could of had the same population in 2018, if a country was added to this data set with an identical population in 2018 then $popData2018$ would no longer functionally determine any other attributes.
+
+$countryTerritoryCode$ would ordinarily determine $countriesAndTerritories, geoId, continentExp$ and $popData2018$. However in the given data set, there are some instances where $countryTerritoryCode$ is blank, meaning that the code can no longer uniquely determine any other attributes.
+
+\subsection*{EX3}
+
+Potential Candidate keys:
+
+-$dateRep, geoId$
+
+-$dateRep, countriesAndTerritories$
+
+-$dateRep, countryterritoryCode$
+
+\subsection*{EX4}
+
+$dateRep$ and $geoId$ make a suitable composite primary key.
+
+$dateRep$ can uniquely identify a record for each country and $geoId$ is a short string. I am not using $countriesAndTerritories$ as the strings are longer and $countryterritoryCode$ is not present for all countries.
+
+\section*{Normalisation}
+
+\subsection*{EX5}
+
+Existing partial key dependencies:
+
+-$day, month, year \rightarrow dateRep$
+
+-$countriesAndTerritories, countryterritoryCode, continentExp \rightarrow geoId$
+
+\vspace{1em}
+
+To solve this we can divide the original relation into three relations:
+
+-$dateRep, day, month, year$
+
+-$geoId, countriesAndTerritories, countryterritoryCode, continentExp, popData2018$
+
+-$dateRep, geoId, cases, deaths$
+
+\subsection*{EX6}
+
+The three new relations:
+
+\begin{center}
+\begin{tabular}{ |c|c|c|c| } 
+ \hline
+ \multicolumn{4}{|c|}{Date} \\
+ \hline
+ dateRep & day & month & year \\
+ \hline
+ DATE & INTEGER & INTEGER & INTEGER \\
+ \hline
+\end{tabular}
+\end{center}
+
+\begin{center}
+\begin{tabular}{ |c|c|c|c|c| } 
+ \hline
+ \multicolumn{5}{|c|}{Country} \\
+ \hline
+ geoId & countriesAndTerritories & countryterritoryCode & continentExp & popData2018 \\
+ \hline
+ TEXT & TEXT & TEXT & TEXT & INTEGER \\
+ \hline
+\end{tabular}
+\end{center}
+
+\begin{center}
+\begin{tabular}{ |c|c|c|c| } 
+ \hline
+ \multicolumn{4}{|c|}{Virus Info} \\
+ \hline
+ dateRep & geoId & cases & deaths \\
+ \hline
+ TEXT & TEXT & INTEGER & INTEGER \\
+ \hline
+\end{tabular}
+\end{center}
+
+The primary keys for their respective tables are:
+
+-Date - $dateRep$
+
+-Country - $geoId$
+
+-Virus - $dateRep, geoId$
+
+\vspace{1em}
+
+The foreign keys for their respective tables are:
+
+-Date - None
+
+-Country - None
+
+-Virus - $dateRep$ and $geoId$
+
+\vspace{1em}
+
+I established any partial key dependencies, $day, month$ and $year$ were dependent on $dateRep$ and not $geoId$, so they were only partially dependent on the key.
+
+$countriesAndTerritories, countryTerritoryCode$ and $continentExp$ were dependent on $geoId$ and not $dateRep$, so they were only partially dependent on the key. I then divided the attributes so that they all depended on the entirety of their respective keys.
+
+\subsection*{EX7}
+
+As the relations currently exist, there are no transitive dependencies.
+
+$countriesAndTerritories$ and $countryterritoryCode$ would be a transitive dependency as\newline
+$geoId \rightarrow countriesAndTerritories$ and $countriesAndTerritories \rightarrow countryterritoryCode$.
+
+But this is not a valid transitive dependency as $countriesAndTerritories \rightarrow geoId$, and for a transitive dependency $A \rightarrow B \rightarrow C$, there cannot exist $B \rightarrow A$.
+
+\subsection*{EX8}
+
+The relations in 3NF:
+
+\begin{center}
+\begin{tabular}{ |c|c|c|c| } 
+ \hline
+ \multicolumn{4}{|c|}{Date} \\
+ \hline
+ dateRep & day & month & year \\
+ \hline
+ DATE & INTEGER & INTEGER & INTEGER \\
+ \hline
+\end{tabular}
+\end{center}
+
+\begin{center}
+\begin{tabular}{ |c|c|c|c|c| } 
+ \hline
+ \multicolumn{5}{|c|}{Country} \\
+ \hline
+ geoId & countriesAndTerritories & countryterritoryCode & continentExp & popData2018 \\
+ \hline
+ TEXT & TEXT & TEXT & TEXT & INTEGER \\
+ \hline
+\end{tabular}
+\end{center}
+
+\begin{center}
+\begin{tabular}{ |c|c|c|c| } 
+ \hline
+ \multicolumn{4}{|c|}{Virus Info} \\
+ \hline
+ dateRep & geoId & cases & deaths \\
+ \hline
+ TEXT & TEXT & INTEGER & INTEGER \\
+ \hline
+\end{tabular}
+\end{center}
+
+% \begin{center}
+% \begin{tabular}{ |c|c|c|c| } 
+%  \hline
+%  \multicolumn{4}{|c|}{Date} \\
+%  \hline
+%  dateRep & day & month & year \\
+%  \hline
+%  DATE & INTEGER & INTEGER & INTEGER \\
+%  \hline
+% \end{tabular}
+% \end{center}
+
+% \begin{center}
+% \begin{tabular}{ |c|c|c|c| } 
+%  \hline
+%  \multicolumn{4}{|c|}{Virus Info} \\
+%  \hline
+%  dateRep & geoId & cases & deaths \\
+%  \hline
+%  DATE & CHAR(N) & INTEGER & INTEGER \\
+%  \hline
+% \end{tabular}
+% \end{center}
+
+% \begin{center}
+% \begin{tabular}{ |c|c| } 
+%  \hline
+%  \multicolumn{2}{|c|}{Country Code} \\
+%  \hline
+%  geoId & countryterritoryCode\\
+%  \hline
+%  CHAR(n) & CHAR(n) \\
+%  \hline
+% \end{tabular}
+% \end{center}
+
+% \begin{center}
+% \begin{tabular}{ |c|c|c|c| } 
+%  \hline
+%  \multicolumn{4}{|c|}{Country Info} \\
+%  \hline
+%  geoId & countriesAndTerritories & continentExp & popData2018\\
+%  \hline
+%  CHAR(n) & VARCHAR(n) & VARCHAR(n) & BIGINT \\
+%  \hline
+% \end{tabular}
+% \end{center}
+
+Since there are no transitive dependencies, the relations are the same as they were in 2NF.
+
+\vspace{1em}
+
+The primary keys for their respective tables are:
+
+-Date - $dateRep$
+
+-Country - $geoId$
+
+-Virus - $dateRep, geoId$
+
+\vspace{1em}
+
+The foreign keys for their respective tables are:
+
+-Date - None
+
+-Country - None
+
+-Virus - $dateRep$ and $geoId$
+
+% The keys for the respective tables are:
+
+% -Date - $dateRep$
+
+% -Virus Info - $dateRep, geoId$
+
+% -Country Code - $geoId$
+
+% -Country Info - $geoId$
+
+\subsection*{EX9}
+
+The relation is in Boyce-Codd Normal Form (BCNF), BCNF requires for every all dependencies $A \rightarrow B$, $A$ must be a superkey.
+
+For example this is true in Country, $countriesAndTerritories$ determines other attributes, though it is a superkey so it is allowed in BCNF.
+
+\pagebreak
+
+\section*{Modelling}
+
+\subsection*{EX11}
+
+The indexes I have created in their respective tables are:
+
+-Date - Index $dateIndex$ created on $dateRep$
+
+-Virus - Index $dateLocation$ created on $dateRep$ and $geoId$
+
+-Country - Index $locationName$ created on $countriesAndTerritories$ and index $locationId$ created on $geoId$
+
+I chose $dateRep$ as the index for Date as anyone querying the Date table is likely to be doing so using a specific date.
+
+I chose $dateRep$ and $geoId$ to be the indexes for Virus as case and death information is likely to be queried with a time and place.
+
+I chose $countriesAndTerritories$ as an index for Country as country information is likely to be queried with the country name.
+
+I also chose $geoId$ as an index for Country as country information is also likely to be queried using the countries ID.
+
+\section*{Querying}
+
+\subsection*{EX14}
+
+\begin{lstlisting}[
+           language=SQL,
+           showspaces=false,
+           basicstyle=\ttfamily,
+           numbers=left,
+           numberstyle=\tiny,
+           commentstyle=\color{gray},
+           keywords={[2]{}}
+        ]
+SELECT sum(cases) AS "total cases", 
+       sum(deaths) AS "total deaths"
+FROM Virus;
+\end{lstlisting}
+
+\subsection*{EX15}
+
+\begin{lstlisting}[
+           language=SQL,
+           showspaces=false,
+           basicstyle=\ttfamily,
+           numbers=left,
+           numberstyle=\tiny,
+           commentstyle=\color{gray},
+           keywords={INNER, SELECT, FROM, ORDER, BY, WHERE, ON, ASC, DESC, AS, JOIN, GROUP},
+           keywords={[2]{}}
+        ]
+SELECT virus.dateRep AS date,
+       virus.cases AS "number of cases"
+FROM Virus INNER JOIN date ON virus.dateRep = date.dateRep
+WHERE virus.geoId = 'UK'
+ORDER BY date.year, date.month, date.day ASC;
+\end{lstlisting}
+
+\pagebreak
+
+\subsection*{EX16}
+
+\begin{lstlisting}[
+           language=SQL,
+           showspaces=false,
+           basicstyle=\ttfamily,
+           numbers=left,
+           numberstyle=\tiny,
+           commentstyle=\color{gray},
+           keywords={INNER, SELECT, FROM, ORDER, BY, WHERE, ON, ASC, DESC, AS, JOIN, GROUP},
+           keywords={[2]{}}
+        ]
+SELECT country.continentExp AS continent,
+       virus.dateRep AS date,
+       sum(virus.cases) AS "number of cases",
+       sum(virus.deaths) AS "number of deaths"
+FROM Virus
+INNER JOIN country ON virus.geoId = country.geoId
+INNER JOIN date ON virus.dateRep = date.dateRep
+GROUP BY country.continentExp, virus.dateRep
+ORDER BY date.year, date.month, date.day ASC;
+\end{lstlisting}
+
+\subsection*{EX17}
+
+\begin{lstlisting}[
+           language=SQL,
+           showspaces=false,
+           basicstyle=\ttfamily,
+           numbers=left,
+           numberstyle=\tiny,
+           commentstyle=\color{gray},
+           keywords={INNER, SELECT, FROM, ORDER, BY, WHERE, ON, ASC, DESC, AS, JOIN, GROUP},
+           keywords={[2]{}}
+        ]
+SELECT country.countriesAndTerritories AS country,
+       round((sum(virus.cases) * 1.0 / country.popData2018) * 100, 2) AS "% cases of population",
+       round((sum(virus.deaths) * 1.0 / country.popData2018) * 100, 2) AS "% cases of deaths"
+FROM Virus
+INNER JOIN Country ON virus.geoId = country.geoId
+GROUP BY country.countriesAndTerritories, country.popData2018;
+\end{lstlisting}
+
+\subsection*{EX18}
+
+\begin{lstlisting}[
+           language=SQL,
+           showspaces=false,
+           basicstyle=\ttfamily,
+           numbers=left,
+           numberstyle=\tiny,
+           commentstyle=\color{gray},
+           keywords={INNER, SELECT, FROM, ORDER, BY, WHERE, ON, ASC, DESC, AS, JOIN, GROUP, LIMIT},
+           keywords={[2]{}}
+        ]
+SELECT country.countriesAndTerritories AS "country name",
+       round((sum(virus.deaths) * 1.0 / sum(virus.cases)) * 100, 2) AS "% cases of deaths"
+FROM Virus
+INNER JOIN Country ON virus.geoId = country.geoId
+GROUP BY country.countriesAndTerritories, country.popData2018
+ORDER BY "% cases of deaths" DESC
+LIMIT 10;
+\end{lstlisting}
+
+\pagebreak
+
+\subsection*{EX19}
+
+\begin{lstlisting}[
+           language=SQL,
+           showspaces=false,
+           basicstyle=\ttfamily,
+           numbers=left,
+           numberstyle=\tiny,
+           commentstyle=\color{gray},
+           keywords={INNER, SELECT, FROM, ORDER, BY, WHERE, ON, ASC, DESC, AS, JOIN, GROUP, LIMIT},
+           keywords={[2]{}}
+        ]
+SELECT date.dateRep,
+       sum(virus.cases) OVER (
+           ORDER BY date.year, date.month, date.day
+           ROWS BETWEEN
+               UNBOUNDED PRECEDING
+               AND CURRENT ROW
+           ) AS 'cumulative UK cases',
+       sum(virus.deaths) OVER (
+           ORDER BY date.year, date.month, date.day
+           ROWS BETWEEN
+               UNBOUNDED PRECEDING
+               AND CURRENT ROW
+           ) AS 'cumulative UK deaths'
+FROM Date
+INNER JOIN Virus ON date.dateRep = virus.dateRep AND virus.geoId = 'UK'
+ORDER BY date.year, date.month, date.day ASC;
+\end{lstlisting}
+
+
+\end{document}
